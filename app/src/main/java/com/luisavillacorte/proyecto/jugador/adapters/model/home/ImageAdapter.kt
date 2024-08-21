@@ -26,7 +26,7 @@ class ImageAdapter(private val images: List<ImagenData>) :
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val image = images[position]
         holder.textViewNombre.text = image.Nombre
-        holder.textViewDescripcion.text = image.Descripcion
+        //holder.textViewDescripcion.text = image.Descripcion
         Glide.with(holder.imageView.context).load(image.ImageUrl).into(holder.imageView)
     }
 

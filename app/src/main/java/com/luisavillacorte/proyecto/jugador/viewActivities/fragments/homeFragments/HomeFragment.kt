@@ -26,7 +26,7 @@ import com.luisavillacorte.proyecto.jugador.adapters.model.auth.PerfilUsuarioRes
 import com.luisavillacorte.proyecto.jugador.adapters.model.home.Campeonatos
 import com.luisavillacorte.proyecto.jugador.adapters.model.home.ImagenData
 
-class HomeFragment() : Fragment(), HomeContract.View, Parcelable {
+class HomeFragment() : Fragment(), HomeContract.View {
 
     private lateinit var presenter: HomePresenter
     private lateinit var recyclerViewCampeonatos: RecyclerView
@@ -34,9 +34,6 @@ class HomeFragment() : Fragment(), HomeContract.View, Parcelable {
     private lateinit var campeonatosAdapter: CampeonatosAdapter
     private lateinit var imageAdapter: ImageAdapter
     private lateinit var nombrejuga: TextView
-
-    constructor(parcel: Parcel) : this() {
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,7 +53,7 @@ class HomeFragment() : Fragment(), HomeContract.View, Parcelable {
         recyclerViewCampeonatos.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         recyclerViewImages.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-        val campeonatosApiService = RetrofitInstance.createService(HomeApiService::class.java)
+        // Inicializar presenter con RetrofitInstance
         presenter = HomePresenter(
             this, requireContext(),
             RetrofitInstance.createService(HomeApiService::class.java)
@@ -68,11 +65,11 @@ class HomeFragment() : Fragment(), HomeContract.View, Parcelable {
     }
 
     override fun showLoading() {
-        // Optionally show a loading indicator
+        // Muestra un indicador de carga si es necesario
     }
 
     override fun hideLoading() {
-        // Optionally hide the loading indicator
+        // Oculta el indicador de carga si es necesario
     }
 
     override fun showCampeonatos(campeonatos: List<Campeonatos>) {
@@ -94,30 +91,17 @@ class HomeFragment() : Fragment(), HomeContract.View, Parcelable {
     }
 
     override fun showError(message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        context?.let {
+            Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
+        } ?: run {
+            Log.e("HomeFragment", "Context is null, cannot show toast")
+        }
     }
+
 
     override fun traernombre(perfilUsuarioResponse: PerfilUsuarioResponse) {
         val nombreJugador = perfilUsuarioResponse.nombres
         nombrejuga.text = "Hola $nombreJugador, Bienvenido a GoSport"
         Log.d("HomeFragment", "Nombre del usuario: $nombreJugador")
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        // Implementa si es necesario
-    }
-
-    companion object CREATOR : Parcelable.Creator<HomeFragment> {
-        override fun createFromParcel(parcel: Parcel): HomeFragment {
-            return HomeFragment(parcel)
-        }
-
-        override fun newArray(size: Int): Array<HomeFragment?> {
-            return arrayOfNulls(size)
-        }
     }
 }
