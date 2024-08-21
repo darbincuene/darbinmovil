@@ -49,11 +49,12 @@ class HomeFragment() : Fragment(), HomeContract.View, Parcelable {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerViewCampeonatos = view.findViewById(R.id.recyclerViewCampeonatos)
-        recyclerViewImages = view.findViewById(R.id.recyclerViewImages) // Nuevo RecyclerView para imágenes
+        recyclerViewImages = view.findViewById(R.id.recyclerViewImages)
         nombrejuga = view.findViewById(R.id.nombreusuario)
 
-        recyclerViewCampeonatos.layoutManager = LinearLayoutManager(context)
-        recyclerViewImages.layoutManager = LinearLayoutManager(context) // Configura el layout manager para imágenes
+        // Configura el layout manager para mostrar los items horizontalmente
+        recyclerViewCampeonatos.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        recyclerViewImages.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         val campeonatosApiService = RetrofitInstance.createService(HomeApiService::class.java)
         presenter = HomePresenter(
@@ -63,7 +64,7 @@ class HomeFragment() : Fragment(), HomeContract.View, Parcelable {
 
         presenter.getCampeonatos()
         presenter.getPerfilUsuario()
-        presenter.getImages() // Método para obtener imágenes
+        presenter.getImages()
     }
 
     override fun showLoading() {

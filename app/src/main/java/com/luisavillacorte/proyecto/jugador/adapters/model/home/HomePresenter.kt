@@ -61,12 +61,17 @@ class HomePresenter(
             ) {
                 if (response.isSuccessful) {
                     response.body()?.let { images ->
+                        Log.d(TAG, "Images fetched successfully: ${images.size}")
+                        images.forEach { image ->
+                            Log.d(TAG, "Image URL: ${image.ImageUrl}")
+                        }
                         view.showImages(images)
-                        Log.d(TAG, "Images fetched and shown: ${images.size}")
+                    } ?: run {
+                        Log.d(TAG, "Response body is null")
                     }
                 } else {
                     view.showError("Error: ${response.code()}")
-                    Log.e(TAG, "Error response code: ${response.code()}")
+                    Log.e(TAG, "Error response code: ${response.code()} - ${response.message()}")
                 }
                 view.hideLoading()
             }
